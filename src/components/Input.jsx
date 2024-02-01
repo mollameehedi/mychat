@@ -2,9 +2,9 @@ import { TextField } from '@mui/material'
 import React from 'react'
 
 
-const Input = ({variant,labeltext,style,type,name}) => {
+const Input = ({variant,labeltext,style,type,name,onChange}) => {
   return (
-    <TextField type={type} name={name} label={labeltext} variant={variant} className={style}/>
+    <TextField onChange={onChange} type={type} name={name} label={labeltext} variant={variant} className={style}/>
   )
 }
 

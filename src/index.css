@@ -2,3 +2,44 @@
     margin: 0;
     padding: 0px;
 }
+.relative{
+    position: relative;
+}
+.absolute{
+    position: absolute;
+}
+.right-10{
+    right: 10%;
+}
+.right-5{
+    right: 5%;
+}
+.top-50{
+    top: 50%;
+}
+
+/*  width */
+.w-5{
+    width: 5%;
+}
+.pt-5{
+    padding-top: 5px;
+}
+.pb-5{
+    padding-bottom: 5px;
+}
+.flex{
+    display: flex;
+}
+.block{
+    display: block;
+}
+.inline-block{
+    display: inline-block;
+}
+.justify-items-end{
+    justify-items: end;
+}
+.align-items-center{
+    align-items: center;
+}
