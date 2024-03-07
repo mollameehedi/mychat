@@ -1,15 +1,18 @@
 import "../login/login.css";
-import SectionHeading from '../../components/SectionHeading';
-import Input from '../../components/Input';
-import CustomButton from '../../components/CustomButton';
-import AuthNavigate from '../../components/AuthNavigate';
+import SectionHeading from '../../utils/SectionHeading';
+import Input from '../../utils/Input';
+import CustomButton from '../../utils/CustomButton';
+import AuthNavigate from '../../utils/AuthNavigate';
 import LoginImg from '../../assets/images/login.jpg';
 import Image from '../../utils/Image';
 import { Alert, Box, Grid } from '@mui/material';
 import { useFormik  } from 'formik';
 import { registerValidation } from '../../validation/AuthValidate';
+import { getAuth, createUserWithEmailAndPassword,sendEmailVerification  } from "firebase/auth";
 
 const Registration = () => {
+  const auth = getAuth();
+
 
   const formik = useFormik({
     initialValues: {
@@ -19,7 +22,21 @@ const Registration = () => {
     },
     validationSchema:registerValidation,
     onSubmit: values => {
-      console.log(values);
+      console.log(values.email, values.password);
+      createUserWithEmailAndPassword(auth, values.email, values.password)
+  .then((userCredential) => {
+    // Signed up 
+    const user = userCredential.user;
+    sendEmailVerification(auth.currentUser)
+    .then(() => {
+      console.log('email sent successfully');
+    });
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode,errorMessage);
+  });
     },
   });
 

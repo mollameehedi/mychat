@@ -1,5 +1,93 @@
-.sidebar{
-    width: 100%;
-    background: red;
+.sidebarBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #5F35F5;
+    align-items: center;
     height: 100vh;
+}
+.sidebarBox .sidebar_user{
+    padding-bottom: 40px;
+}
+.sidebarBox .sidebar_user h3{
+    color: white;
+    text-align: center;
+    font-size: 25px;
+    padding-top: 20px;
+}
+.sidebarBox .img_box{
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    background: gray;
+    margin-top: 30px;
+}
+.sidebarBox .nav{
+    width: 100%;
+}
+.sidebarBox .navigation{
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+.sidebarBox .navigation li a{
+    color: rgb(255, 255, 255);
+    display: inline-block;
+    padding: 20px 0px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+
+.sidebarBox .navigation li a svg{
+    font-size: 50px;
+}
+.sidebarBox .navigation li a.active:after{
+    position: absolute;
+    content: '';
+    right: 0px;
+    top: 0px;
+    width: 90%;
+    color: #5F35F5;
+    background-color: white;
+    height: 100%;
+    z-index: -1;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+.sidebarBox .navigation li a.active:before{
+    position: absolute;
+    content: '';
+    right: 0px;
+    top: 0px;
+    width: 8px;
+    background-color: #5F35F5;
+    height: 100%;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+.sidebarBox .navigation li a.active{
+    color: #5F35F5;
+}
+.logout{
+    padding: 15px 50px;
+    color: #5F35F5;
+    font-size: 22px;
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: transparent;
+}
+.logout button{
+    padding: 15px 50px;
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: transparent;
+}
+.sidebarBox .logout svg{
+    font-size: 50px;
+    color: white;
 }

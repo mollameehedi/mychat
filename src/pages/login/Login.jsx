@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import "./login.css";
-import SectionHeading from '../../components/SectionHeading';
+import SectionHeading from '../../utils/SectionHeading';
 import GoogleSvg from '../../../public/google.svg';
-import Input from '../../components/Input';
-import CustomButton from '../../components/CustomButton';
-import AuthNavigate from '../../components/AuthNavigate';
+import Input from '../../utils/Input';
+import CustomButton from '../../utils/CustomButton';
+import AuthNavigate from '../../utils/AuthNavigate';
 import LoginImg from '../../assets/images/login.jpg';
 import Image from '../../utils/Image';
 import Modal from '@mui/material/Modal';
@@ -14,6 +14,7 @@ import { FaEye,FaEyeSlash,FaXmark } from "react-icons/fa6";
 import { loginValidation } from '../../validation/AuthValidate';
 import { useFormik  } from 'formik';
 import { Alert } from '@mui/material';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const style = {
   position: 'absolute',
@@ -27,7 +28,10 @@ const style = {
   p: 4,
 };
 const Login = () => {
-  let [passShow, setPassShow] = useState(false)
+
+  const auth = getAuth();
+
+  let [passShow, setPassShow] = useState(true)
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -42,7 +46,17 @@ const Login = () => {
     },
     validationSchema:loginValidation,
     onSubmit: values => {
-      console.log(values);
+      signInWithEmailAndPassword(auth, values.email, values.password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log(user);
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode,errorMessage);
+  });
     },
   });
   return (
