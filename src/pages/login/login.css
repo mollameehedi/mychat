@@ -84,8 +84,28 @@
 .forgot_box {
  display: flex;
  flex-direction: column;
+ position: relative;
+}
+.loginbox .form_main .input-group .password_on_off{
+ background: transparent;
+ border: 0px;
 }
 .forgot_box h2{
     margin-top: 20px;
     margin-bottom: 20px;
+}
+.forgot_box .forgot_close{
+   position: absolute;
+   top: -40px;
+   right: -40px;
+   background: transparent;
+   border: 0px;
+    cursor: pointer;
+}
+.forgot_box .forgot_close svg{
+   font-size: 20px;
+   border: 1px solid rgb(52, 52, 52);
+   background: white;
+   padding: 3px;
+   border-radius: 50%;
 }
