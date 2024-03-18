@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { IoHomeOutline } from "react-icons/io5";
 import { FaCommentDots,FaRegBell  } from "react-icons/fa";
 import { HiOutlineCog6Tooth } from "react-icons/hi2";
@@ -8,11 +8,23 @@ import Image from '../../utils/Image';
 import { getAuth, signOut } from "firebase/auth";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux'
+import { loginUser } from '../../slices/userSlice';
 
 const Sidebar = () => {
     const auth = getAuth();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const data = useSelector((state) => state.loginuserdata.value)
 
+    useEffect(() => {
+      if(!data){
+          navigate('/')
+      }
+      else{
+          navigate('/home')
+      }
+  },[]);
 
     const handleLogout = () => {
         signOut(auth).then(() => {
@@ -26,6 +38,8 @@ const Sidebar = () => {
               progress: undefined,
               theme: "dark",
               });
+              localStorage.removeItem('user')
+              dispatch(loginUser(null))
               navigate('/')
           }).catch((error) => {
             // An error happened.
@@ -37,9 +51,10 @@ const Sidebar = () => {
         <div className="sidebarBox">
            <div className="sidebar_user">
            <div className='img_box'>
-                <Image src={userinfo.photoURL} alt='Profile Photo'/>
+                <Image src={data && data.photoURL} alt='Profile Photo'/>
             </div>
-            <h3 className='username'>{userinfo.displayName}</h3>
+            <h3 className='username'>{data && data.displayName}</h3>
+            <p>{data && data.email}</p>
            </div>
             <div className='nav'>
                 <ul className='navigation'>
