@@ -22,6 +22,12 @@
     background: gray;
     margin-top: 30px;
 }
+.sidebarBox .img_box img{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+ }
 .sidebarBox .nav{
     width: 100%;
 }

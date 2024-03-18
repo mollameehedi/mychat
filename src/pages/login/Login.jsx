@@ -14,7 +14,9 @@ import { FaEye,FaEyeSlash,FaXmark } from "react-icons/fa6";
 import { loginValidation } from '../../validation/AuthValidate';
 import { useFormik  } from 'formik';
 import { Alert } from '@mui/material';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword,signOut } from "firebase/auth";
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: 'absolute',
@@ -30,6 +32,7 @@ const style = {
 const Login = () => {
 
   const auth = getAuth();
+  const navigate = useNavigate();
 
   let [passShow, setPassShow] = useState(true)
   const [open, setOpen] = React.useState(false);
@@ -50,12 +53,34 @@ const Login = () => {
   .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    console.log(user);
+    if(user.emailVerified){
+      navigate('/home')
+      toast.success('Login Successful!');
+    }
+    else{
+      signOut(auth).then(() => {
+        toast.error('Please Verify Your Email!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          });
+        console.log('done!');
+      }).catch((error) => {
+        // An error happened.
+      });
+    }
   })
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
-    console.log(errorCode,errorMessage);
+    if(errorCode == 'auth/invalid-credential'){
+    toast.error('Email Or Password Invalid!');
+    }
   });
     },
   });

@@ -8,10 +8,15 @@ import Image from '../../utils/Image';
 import { Alert, Box, Grid } from '@mui/material';
 import { useFormik  } from 'formik';
 import { registerValidation } from '../../validation/AuthValidate';
-import { getAuth, createUserWithEmailAndPassword,sendEmailVerification  } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,sendEmailVerification,updateProfile  } from "firebase/auth";
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import { getDatabase, ref, set } from "firebase/database";
 
 const Registration = () => {
   const auth = getAuth();
+  const db = getDatabase();
+  const navigate = useNavigate();
 
 
   const formik = useFormik({
@@ -22,14 +27,31 @@ const Registration = () => {
     },
     validationSchema:registerValidation,
     onSubmit: values => {
-      console.log(values.email, values.password);
       createUserWithEmailAndPassword(auth, values.email, values.password)
   .then((userCredential) => {
     // Signed up 
     const user = userCredential.user;
     sendEmailVerification(auth.currentUser)
     .then(() => {
-      console.log('email sent successfully');
+      updateProfile(auth.currentUser,{
+        displayName: values.fullname,
+        photoURL:'https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=612x612&w=0&k=20&c=s0aTdmT5aU6b8ot7VKm11DeID6NctRCpB755rA1BIP0='
+      }).then(()=>{
+
+        set(ref(db, 'users/' + user.uid), {
+          username: user.displayName,
+          email: user.email,
+          profileimg : user.photoURL
+        })
+        .then(()=>{
+          // input reset value here
+          navigate('/')
+
+          console.log(user); 
+        });
+
+      })
+      toast.success('Please Check Your Mail to Verify Your Account!!');
     });
   })
   .catch((error) => {

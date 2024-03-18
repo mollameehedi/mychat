@@ -5,16 +5,41 @@ import { HiOutlineCog6Tooth } from "react-icons/hi2";
 import { IoIosLogOut } from "react-icons/io";
 import { Link, NavLink } from 'react-router-dom';
 import Image from '../../utils/Image';
+import { getAuth, signOut } from "firebase/auth";
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
+    const auth = getAuth();
+    const navigate = useNavigate();
+
+
+    const handleLogout = () => {
+        signOut(auth).then(() => {
+            toast.error('Logout Successfully!', {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              });
+              navigate('/')
+          }).catch((error) => {
+            // An error happened.
+          });
+    }
+    const userinfo = auth.currentUser;
   return (
     <>
         <div className="sidebarBox">
            <div className="sidebar_user">
            <div className='img_box'>
-                <Image src='' alt='Profile Photo'/>
+                <Image src={userinfo.photoURL} alt='Profile Photo'/>
             </div>
-            <h3 className='username'>Mehedi</h3>
+            <h3 className='username'>{userinfo.displayName}</h3>
            </div>
             <div className='nav'>
                 <ul className='navigation'>
@@ -25,7 +50,7 @@ const Sidebar = () => {
                 </ul>
             </div>
             <div className='logout'>
-                <button><IoIosLogOut/></button>
+                <button onClick={handleLogout}><IoIosLogOut/></button>
             </div>
         </div>
     </>
