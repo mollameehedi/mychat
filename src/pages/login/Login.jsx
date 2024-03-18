@@ -17,6 +17,8 @@ import { Alert } from '@mui/material';
 import { getAuth, signInWithEmailAndPassword,signOut } from "firebase/auth";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux'
+import { loginUser } from '../../slices/userSlice';
 
 const style = {
   position: 'absolute',
@@ -33,6 +35,7 @@ const Login = () => {
 
   const auth = getAuth();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   let [passShow, setPassShow] = useState(true)
   const [open, setOpen] = React.useState(false);
@@ -54,6 +57,8 @@ const Login = () => {
     // Signed in 
     const user = userCredential.user;
     if(user.emailVerified){
+      localStorage.setItem('user',JSON.stringify(user))
+      dispatch(loginUser(user))
       navigate('/home')
       toast.success('Login Successful!');
     }
