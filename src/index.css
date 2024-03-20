@@ -43,3 +43,8 @@
 .align-items-center{
     align-items: center;
 }
+.groupbtn{
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
