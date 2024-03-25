@@ -35,6 +35,26 @@ const FriendRequest = () => {
    
    }
 
+   let handleAcceptReqeust = (acceptInfo) =>{
+    set(push(ref(db, 'friends/')),{
+      whosendname:acceptInfo.sendername,
+      whosendid:acceptInfo.sender_id,
+      whosendemail:acceptInfo.senderemail,
+      whosendphoto:acceptInfo.senderimg,
+      whoreceivename:data.displayName,
+      whoreceiveid:data.uid,
+      whoreceiveemail:data.email,
+      whoreceivephoto:data.photoURL,
+  
+  }).then(() => {
+    remove(ref(db, 'friendrequest/' + acceptInfo.id));
+  toast.success('Friend Request Accepted Successfully!!');
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+   }
+
   return (
     <>
          <GroupCard cardTitle='Friend Request List'>
@@ -50,7 +70,7 @@ const FriendRequest = () => {
                  <p>Mern developer</p>
              </div>
              <div className='groupbtn'>
-             <button className='addbutton'>Accept</button>
+             <button className='addbutton' onClick={()=>handleAcceptReqeust(user)}>Accept</button>
              <button className='addbutton' onClick={()=>handleCencelReqeust(user)}>Cancel</button>
              </div>
              </div>

@@ -3,6 +3,7 @@ import React from 'react'
 import UserLIst from '../../components/home/UserLIst'
 import FriendRequest from '../../components/home/FriendRequest'
 import './home.css'
+import Friends from '../../components/home/Friends'
 
 const Home = () => {
   return (
@@ -12,7 +13,7 @@ const Home = () => {
             <UserLIst/>
         </Grid>
          <Grid item lg={4} >
-         <FriendRequest/>
+         <Friends/>
         </Grid>
         <Grid item lg={4}>
             <FriendRequest/>

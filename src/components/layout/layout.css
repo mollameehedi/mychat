@@ -8,6 +8,9 @@
 }
 .sidebarBox .sidebar_user{
     padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .sidebarBox .sidebar_user h3{
     color: white;
@@ -21,13 +24,52 @@
     border-radius: 50%;
     background: gray;
     margin-top: 30px;
+    position: relative;
+    overflow: hidden;
 }
 .sidebarBox .img_box img{
+   height: 100%;
+   width: 100%;
+   border-radius: 50%;
+   object-fit: cover;
+}
+.sidebarBox .img_box .overlay{
+   position: absolute;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   bottom: 0;
+   left: 0;
+   height: 100%;
+   width: 100%;
+   background: rgba(0, 0, 0, 0.5);
+   border-radius: 50%;
+   opacity: 0;
+   transition: all linear 0.4s;
+   cursor: pointer;
+}
+.sidebarBox .img_box .overlay svg{
+    color: white;
+    font-size: 28px;
+    margin: auto;
+  text-align: center;
+}
+ .img_holder{
+    height: 80px;
+    width: 80px;
+    overflow: hidden;
+    border-radius: 50%;
+    text-align: center;
+}
+.img_holder img{
     height: 100%;
     width: 100%;
-    border-radius: 50%;
     object-fit: cover;
- }
+    margin: 0px auto;
+}
+.sidebarBox .img_box:hover .overlay{
+    opacity: 1;
+}
 .sidebarBox .nav{
     width: 100%;
 }
