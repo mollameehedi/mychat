@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import { getDatabase, ref, onValue,set,push  } from "firebase/database";
+import { getDatabase, ref, onValue,set,push,remove  } from "firebase/database";
 import GroupCard from '../common/groupcard/GroupCard';
 import Image from '../../utils/Image'
 import { FaPlus } from "react-icons/fa";
@@ -11,6 +11,7 @@ const UserLIst = () => {
     const db = getDatabase();
 
     const [users, setUsers] = useState([]);
+    const[fRequest,setfRequest] = useState([]);
     const data = useSelector((state) => state.loginuserdata.value)
 
 
@@ -26,6 +27,21 @@ const UserLIst = () => {
        setUsers(arr);
     });
    },[])
+
+
+   useEffect(()=> {
+    const fRequestRef = ref(db, 'friendrequest/');
+    onValue(fRequestRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        if(data.uid == item.val().sender_id){
+          arr.push(item.val().sender_id + item.val().receiver_id)
+        }
+      })
+      setfRequest(arr);
+    });
+   },[])
+   console.log(fRequest);
    
    // handle friend request
    let handleFRequest = (requestinfo)=>{
@@ -47,6 +63,12 @@ const UserLIst = () => {
   })
    }
 
+   let handleCencelReqeust = (cencelInfo) =>{
+    //  remove(ref(db, 'friendrequest/' + cencelInfo.id)).then(() => {
+    //   toast.success('Friend Request Canceled!!');
+    // })
+   }
+
   return (
     <>
          <GroupCard cardTitle='Friend List'>
@@ -61,7 +83,11 @@ const UserLIst = () => {
                  <h3>{user.username}</h3>
                  <p>Mern developer</p>
              </div>
-             <button className='addbutton' onClick={()=>handleFRequest(user)}><FaPlus /></button>
+             {fRequest &&fRequest.includes(user.id + data.uid) || fRequest.includes( data.uid + user.id) ?
+               <button className='addbutton' onClick={() => handleCencelReqeust(user)}>Cancel</button> 
+               : 
+               <button onClick={ () => handleFRequest(user)} className='addbutton text-danger' ><FaPlus /></button>
+               }
              </div>
              </div>
                
