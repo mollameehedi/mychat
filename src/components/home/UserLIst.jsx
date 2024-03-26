@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import { getDatabase, ref, onValue,set,push  } from "firebase/database";
+import { getDatabase, ref, onValue,set,push,remove  } from "firebase/database";
 import GroupCard from '../common/groupcard/GroupCard';
 import Image from '../../utils/Image'
 import { FaPlus } from "react-icons/fa";
@@ -11,9 +11,12 @@ const UserLIst = () => {
     const db = getDatabase();
 
     const [users, setUsers] = useState([]);
+    const[fRequest,setfRequest] = useState([]);
+    const[friendList,setFriendList] = useState([]);
     const data = useSelector((state) => state.loginuserdata.value)
 
 
+    // get users data
    useEffect(() => {
     const userRef = ref(db, 'users/');
     onValue(userRef, (snapshot) => {
@@ -26,10 +29,39 @@ const UserLIst = () => {
        setUsers(arr);
     });
    },[])
+
+   // get friends data
+ useEffect(()=> {
+  const friendsRef = ref(db, 'friends');
+  onValue(friendsRef, (snapshot) => {
+    let arr = [];
+    snapshot.forEach((item) => {
+      if(item.val().whoreceiveid == data.uid || item.val().whosendid == data.uid){
+        arr.push(item.val().whoreceiveid + item.val().whosendid)
+      }
+    })
+    setFriendList(arr);
+  });
+ },[])
+
+// get friend request data
+   useEffect(()=> {
+    const fRequestRef = ref(db, 'friendrequest/');
+    onValue(fRequestRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        if(data.uid == item.val().sender_id){
+          arr.push(item.val().sender_id + item.val().receiver_id)
+        }
+      })
+      setfRequest(arr);
+    });
+   },[])
+   console.log(fRequest);
    
    // handle friend request
    let handleFRequest = (requestinfo)=>{
-    set(push(ref(db, 'friendrequest/')),{
+    set(ref(db, 'friendrequest/'+requestinfo.id),{
       sender_id:data.uid,
       sendername:data.displayName,
       senderimg:data.photoURL,
@@ -47,6 +79,12 @@ const UserLIst = () => {
   })
    }
 
+   let handleCencelReqeust = (cencelInfo) =>{
+     remove(ref(db, 'friendrequest/' + cencelInfo.id)).then(() => {
+      toast.error('Friend Request Canceled!!');
+    })
+   }
+
   return (
     <>
          <GroupCard cardTitle='Friend List'>
@@ -61,7 +99,18 @@ const UserLIst = () => {
                  <h3>{user.username}</h3>
                  <p>Mern developer</p>
              </div>
-             <button className='addbutton' onClick={()=>handleFRequest(user)}><FaPlus /></button>
+             {fRequest.length > 0 && fRequest.includes(user.id + data.uid) || fRequest.includes( data.uid + user.id) ?
+                <>
+                <button className='addbutton'>Pending</button> 
+               <button className='addbutton' onClick={() => handleCencelReqeust(user)}>Cancel</button> 
+                </>
+               : 
+               friendList.includes(user.id + data.uid) || friendList.includes(data.uid+user.id) ?
+               
+               <button  className='addbutton text-danger' >Friends</button>
+               :
+               <button onClick={ () => handleFRequest(user)} className='addbutton text-danger' ><FaPlus /></button>
+               }
              </div>
              </div>
                
