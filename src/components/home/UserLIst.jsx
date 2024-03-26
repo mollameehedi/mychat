@@ -12,9 +12,11 @@ const UserLIst = () => {
 
     const [users, setUsers] = useState([]);
     const[fRequest,setfRequest] = useState([]);
+    const[friendList,setFriendList] = useState([]);
     const data = useSelector((state) => state.loginuserdata.value)
 
 
+    // get users data
    useEffect(() => {
     const userRef = ref(db, 'users/');
     onValue(userRef, (snapshot) => {
@@ -28,7 +30,21 @@ const UserLIst = () => {
     });
    },[])
 
+   // get friends data
+ useEffect(()=> {
+  const friendsRef = ref(db, 'friends');
+  onValue(friendsRef, (snapshot) => {
+    let arr = [];
+    snapshot.forEach((item) => {
+      if(item.val().whoreceiveid == data.uid || item.val().whosendid == data.uid){
+        arr.push(item.val().whoreceiveid + item.val().whosendid)
+      }
+    })
+    setFriendList(arr);
+  });
+ },[])
 
+// get friend request data
    useEffect(()=> {
     const fRequestRef = ref(db, 'friendrequest/');
     onValue(fRequestRef, (snapshot) => {
@@ -45,7 +61,7 @@ const UserLIst = () => {
    
    // handle friend request
    let handleFRequest = (requestinfo)=>{
-    set(push(ref(db, 'friendrequest/')),{
+    set(ref(db, 'friendrequest/'+requestinfo.id),{
       sender_id:data.uid,
       sendername:data.displayName,
       senderimg:data.photoURL,
@@ -64,9 +80,9 @@ const UserLIst = () => {
    }
 
    let handleCencelReqeust = (cencelInfo) =>{
-    //  remove(ref(db, 'friendrequest/' + cencelInfo.id)).then(() => {
-    //   toast.success('Friend Request Canceled!!');
-    // })
+     remove(ref(db, 'friendrequest/' + cencelInfo.id)).then(() => {
+      toast.error('Friend Request Canceled!!');
+    })
    }
 
   return (
@@ -83,9 +99,16 @@ const UserLIst = () => {
                  <h3>{user.username}</h3>
                  <p>Mern developer</p>
              </div>
-             {fRequest &&fRequest.includes(user.id + data.uid) || fRequest.includes( data.uid + user.id) ?
+             {fRequest.length > 0 && fRequest.includes(user.id + data.uid) || fRequest.includes( data.uid + user.id) ?
+                <>
+                <button className='addbutton'>Pending</button> 
                <button className='addbutton' onClick={() => handleCencelReqeust(user)}>Cancel</button> 
+                </>
                : 
+               friendList.includes(user.id + data.uid) || friendList.includes(data.uid+user.id) ?
+               
+               <button  className='addbutton text-danger' >Friends</button>
+               :
                <button onClick={ () => handleFRequest(user)} className='addbutton text-danger' ><FaPlus /></button>
                }
              </div>

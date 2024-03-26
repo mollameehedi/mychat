@@ -4,6 +4,7 @@ import UserLIst from '../../components/home/UserLIst'
 import FriendRequest from '../../components/home/FriendRequest'
 import './home.css'
 import Friends from '../../components/home/Friends'
+import BlockList from '../../components/home/BlockList'
 
 const Home = () => {
   return (
@@ -17,6 +18,9 @@ const Home = () => {
         </Grid>
         <Grid item lg={4}>
             <FriendRequest/>
+        </Grid> 
+        <Grid item lg={4}>
+            <BlockList/>
         </Grid> 
     </Grid>
     </>

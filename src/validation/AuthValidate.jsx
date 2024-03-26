@@ -11,7 +11,7 @@ export const registerValidation = Yup.object({
     
     email:Yup.string()
     .required('Please Enter Email')
-        .matches(emailRegex,  "Only Email allowed")
+        // .matches(emailRegex,  "Only Email allowed")
         .email('Please Provide The Valid Email'),       
     
     password:Yup.string()
@@ -20,7 +20,7 @@ export const registerValidation = Yup.object({
 export const loginValidation = Yup.object({
     email:Yup.string()
     .required('Please Enter Your Email')
-        .matches(emailRegex,  "Please Provide The Valid Email")
+        // .matches(emailRegex,  "Please Provide The Valid Email") wrong regex
         .email('Please Provide The Valid Email'),       
     
     password:Yup.string()

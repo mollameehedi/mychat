@@ -4,6 +4,7 @@ import Image from '../../utils/Image'
 import { FaPlus } from "react-icons/fa";
 import { useSelector } from 'react-redux'
 import { getDatabase, ref, onValue,set,push,remove } from "firebase/database";
+import { toast } from 'react-toastify';
 
 const Friends = () => {
     const db = getDatabase();
@@ -23,6 +24,24 @@ const Friends = () => {
     });
    },[])
 
+   let handleBlock = (blockInfo) =>{
+    set(push(ref(db,'block')),{
+      whoblockid:data.uid,
+      whoblockname:data.displayName,
+      whoblockemail:data.email,
+      whoblockimg:data.photoURL,
+      blockid:blockInfo.whoreceiveid,
+      blockemail:blockInfo.whoreceiveemail,
+      blockname:blockInfo.whoreceivename,
+      blockimg:blockInfo.whoreceivephoto,
+    })
+    .then(() => {
+      remove(ref(db,'friends/' + blockInfo.id));
+      toast.warning('User Blocked!!');
+    })
+     console.log(blockInfo);
+   }
+
   return (
     <>
     <GroupCard cardTitle='Friend List'>
@@ -37,7 +56,7 @@ const Friends = () => {
         {data.uid == item.whosendid ? <h3>{item.whoreceivename}</h3> : <h3>{item.whosendname}</h3>}
             <p>Mern developer</p>
         </div>
-        <button className='addbutton'>block</button>
+        <button className='addbutton' onClick={() => handleBlock(item)}>block</button>
         </div>
         </div>
           
