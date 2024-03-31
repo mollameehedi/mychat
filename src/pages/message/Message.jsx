@@ -59,8 +59,9 @@ const Message = () => {
     const messageRef = ref(db, 'message');
     onValue(messageRef, (snapshot) => {
       let arr = [];
+      let activeuserid = data.uid == activechat.whosendid ? activechat.whoreceiveid : activechat.whosendid
       snapshot.forEach((item) => {
-        if(data.uid == item.val().senderid || data.uid == item.val().receiverid){
+        if((item.val().senderid == data.uid && item.val().receiverid == activeuserid) || (item.val().receiverid == data.uid && item.val().senderid == activeuserid )){
           arr.push({...item.val(),id:item.key})
         }
       })
@@ -99,7 +100,7 @@ const Message = () => {
         </div>
         <div className="msg_main">
           { allmessage.map((item,index) => (
-             <div className="receivemsg" key={index}>
+              <div className={item.receiverid == data.uid ? "receivemsg" : "sendmsg" } key={index}>
              <p>{item.sendermsg}</p>
            </div>
           ))}
